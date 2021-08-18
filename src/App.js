@@ -3,6 +3,7 @@ import './App.css';
 import classNames from 'classnames';
 import TodoList from './components/todoList/index';
 
+
 class App extends React.Component {
   constructor() {
     super();
@@ -16,9 +17,6 @@ class App extends React.Component {
         { title: "SETTING", active: false, href: "https://www.facebook.com/chuongcnbhaf180208/" }
       ],
       todos: [
-        { title: 'Go to market', isComplete: false },
-        { title: 'Buy food', isComplete: true },
-        { title: 'Make dinner', isComplete: false }
       ],
       addNewJob: "",
       currentFilter: "all"
@@ -30,14 +28,56 @@ class App extends React.Component {
     this.changeToCompleted = this.changeToCompleted.bind(this);
     this.clearCompleted = this.clearCompleted.bind(this);
     this.onChange = this.onChange.bind(this);
-
+    this.onClickedEdit = this.onClickedEdit.bind(this);
+    this.onChangeValue = this.onChangeValue.bind(this);
+    this.handleSetState = this.handleSetState.bind(this);
     this.inputAddElement = React.createRef();
   };
 
   componentDidMount() {
     this.inputAddElement.current.focus();
   }
+  handleSetState = (item, value) => {
+    const { todos } = this.state;
+    const { isEdit } = item;
+    const index = todos.indexOf(item);
+    this.setState({
+      todos: [
+        ...todos.slice(0, index),
+        { ...item, title: value, isEdit: !isEdit },
+        ...todos.slice(index + 1)
+      ]
+    })
 
+  }
+  onChangeValue = (item) => {
+    return (event) => {
+      const { todos } = this.state;
+      const index = todos.indexOf(item);
+      this.setState({
+        todos: [
+          ...todos.slice(0, index),
+          { ...item, title: event.target.value },
+          ...todos.slice(index + 1)
+        ]
+      })
+    }
+  }
+  onClickedEdit = (item) => {
+    return (event) => {
+      const { isEdit } = item;
+      const { todos } = this.state;
+      const index = todos.indexOf(item);
+      console.log(isEdit);
+      this.setState({
+        todos: [
+          ...todos.slice(0, index),
+          { ...item, isEdit: !isEdit },
+          ...todos.slice(index + 1)
+        ]
+      })
+    }
+  }
   onclicked = (item) => {
     return (event) => {
       const { isComplete } = item;
@@ -47,7 +87,7 @@ class App extends React.Component {
       this.setState({
         todos: [
           ...todos.slice(0, index),
-          { ...item, isComplete: !isComplete },
+          { ...item, isEdit: false, isComplete: !isComplete },
           ...todos.slice(index + 1)
         ]
       })
@@ -70,7 +110,7 @@ class App extends React.Component {
           { title: text, isComplete: false },
           ...this.state.todos
         ],
-        addNewJob : "",
+        addNewJob: "",
       });
     }
   }
@@ -162,7 +202,7 @@ class App extends React.Component {
                 value={this.state.addNewJob}
                 onChange={this.onChange} />
             </li>
-            {todos.map((item, index) => <TodoList key={index} item={item} onClick={this.onclicked(item)} />)}
+            {todos.map((item, index) => <TodoList handleSetState={this.handleSetState} key={index} item={item} onChangeValue={this.onChangeValue(item)} onClick={this.onclicked(item)} update={this.onClickedEdit(item)} />)}
             <li className="todo-item footer-list">
               <div className="count-item">
                 {todos.length} item

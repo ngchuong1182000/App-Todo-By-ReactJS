@@ -2,14 +2,24 @@
 .todo-item{
   font-family: "Comic Sans MS", cursive, sans-serif;
   display: flex;
-}
-.todo-item {
   color : red
+}
+.border{
+  border: 1px solid green;
+  border-radius: 15px;
+  color:green;
+}
+.mx-10{
+  margin: 0 20px;
 }
 .isComplete {
   opacity: 0.3;
   text-decoration: line-through;
   color : #000
+}
+.flex{
+  display: flex;
+  flex-grow: 1;
 }
 ul{
   padding : 0;
@@ -21,4 +31,7 @@ ul li{
   font-size: 1.2rem ;
   border: 1px solid rgba(42, 53, 42, 0.3);
   border-radius: 5px
+}
+input{
+  background-color: white;
 }
